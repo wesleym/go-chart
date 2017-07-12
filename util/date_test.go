@@ -234,7 +234,7 @@ func TestDateIsNYSEHoliday(t *testing.T) {
 		}
 		cursor = cursor.AddDate(0, 0, 1)
 	}
-	assert.Equal(holidays, 55)
+	assert.Equal(55, holidays)
 }
 
 func TestDateDiffDays(t *testing.T) {

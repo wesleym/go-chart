@@ -81,116 +81,80 @@ var (
 
 type date struct{}
 
-// IsNYSEHoliday returns if a date was/is on a nyse holiday day.
+var nyseHolidays = map[int]map[time.Month][]int{
+	2013: {
+		time.January:   {1, 21},
+		time.February:  {18},
+		time.March:     {29},
+		time.May:       {27},
+		time.July:      {4},
+		time.September: {2},
+		time.November:  {28},
+		time.December:  {25},
+	},
+	2014: {
+		time.January:   {1, 20},
+		time.February:  {17},
+		time.April:     {18},
+		time.May:       {26},
+		time.July:      {4},
+		time.September: {1},
+		time.November:  {27},
+		time.December:  {25}},
+	2015: {
+		time.January:   {1, 19},
+		time.February:  {16},
+		time.April:     {3},
+		time.May:       {25},
+		time.July:      {3},
+		time.September: {7},
+		time.November:  {26},
+		time.December:  {25}},
+	2016: {
+		time.January:   {1, 18},
+		time.February:  {15},
+		time.March:     {25},
+		time.May:       {30},
+		time.July:      {4},
+		time.September: {5},
+		time.November:  {24, 25},
+		time.December:  {26}},
+	2017: {
+		time.January:   {1, 16},
+		time.February:  {20},
+		time.April:     {15},
+		time.May:       {29},
+		time.July:      {4},
+		time.September: {4},
+		time.November:  {23},
+		time.December:  {25}},
+	2018: {
+		time.January:   {1, 15},
+		time.February:  {19},
+		time.March:     {30},
+		time.May:       {28},
+		time.July:      {4},
+		time.September: {3},
+		time.November:  {22},
+		time.December:  {25},
+	},
+}
+
+// IsNYSEHoliday returns if a date was/is on a New York Stock Exchange holiday day.
 func (d date) IsNYSEHoliday(t time.Time) bool {
 	te := t.In(d.Eastern())
-	if te.Year() == 2013 {
-		if te.Month() == 1 {
-			return te.Day() == 1 || te.Day() == 21
-		} else if te.Month() == 2 {
-			return te.Day() == 18
-		} else if te.Month() == 3 {
-			return te.Day() == 29
-		} else if te.Month() == 5 {
-			return te.Day() == 27
-		} else if te.Month() == 7 {
-			return te.Day() == 4
-		} else if te.Month() == 9 {
-			return te.Day() == 2
-		} else if te.Month() == 11 {
-			return te.Day() == 28
-		} else if te.Month() == 12 {
-			return te.Day() == 25
-		}
-	} else if te.Year() == 2014 {
-		if te.Month() == 1 {
-			return te.Day() == 1 || te.Day() == 20
-		} else if te.Month() == 2 {
-			return te.Day() == 17
-		} else if te.Month() == 4 {
-			return te.Day() == 18
-		} else if te.Month() == 5 {
-			return te.Day() == 26
-		} else if te.Month() == 7 {
-			return te.Day() == 4
-		} else if te.Month() == 9 {
-			return te.Day() == 1
-		} else if te.Month() == 11 {
-			return te.Day() == 27
-		} else if te.Month() == 12 {
-			return te.Day() == 25
-		}
-	} else if te.Year() == 2015 {
-		if te.Month() == 1 {
-			return te.Day() == 1 || te.Day() == 19
-		} else if te.Month() == 2 {
-			return te.Day() == 16
-		} else if te.Month() == 4 {
-			return te.Day() == 3
-		} else if te.Month() == 5 {
-			return te.Day() == 25
-		} else if te.Month() == 7 {
-			return te.Day() == 3
-		} else if te.Month() == 9 {
-			return te.Day() == 7
-		} else if te.Month() == 11 {
-			return te.Day() == 26
-		} else if te.Month() == 12 {
-			return te.Day() == 25
-		}
-	} else if te.Year() == 2016 {
-		if te.Month() == 1 {
-			return te.Day() == 1 || te.Day() == 18
-		} else if te.Month() == 2 {
-			return te.Day() == 15
-		} else if te.Month() == 3 {
-			return te.Day() == 25
-		} else if te.Month() == 5 {
-			return te.Day() == 30
-		} else if te.Month() == 7 {
-			return te.Day() == 4
-		} else if te.Month() == 9 {
-			return te.Day() == 5
-		} else if te.Month() == 11 {
-			return te.Day() == 24 || te.Day() == 25
-		} else if te.Month() == 12 {
-			return te.Day() == 26
-		}
-	} else if te.Year() == 2017 {
-		if te.Month() == 1 {
-			return te.Day() == 1 || te.Day() == 16
-		} else if te.Month() == 2 {
-			return te.Day() == 20
-		} else if te.Month() == 4 {
-			return te.Day() == 15
-		} else if te.Month() == 5 {
-			return te.Day() == 29
-		} else if te.Month() == 7 {
-			return te.Day() == 4
-		} else if te.Month() == 9 {
-			return te.Day() == 4
-		} else if te.Month() == 11 {
-			return te.Day() == 23
-		} else if te.Month() == 12 {
-			return te.Day() == 25
-		}
-	} else if te.Year() == 2018 {
-		if te.Month() == 1 {
-			return te.Day() == 1 || te.Day() == 15
-		} else if te.Month() == 2 {
-			return te.Day() == 19
-		} else if te.Month() == 3 {
-			return te.Day() == 30
-		} else if te.Month() == 5 {
-			return te.Day() == 28
-		} else if te.Month() == 7 {
-			return te.Day() == 4
-		} else if te.Month() == 9 {
-			return te.Day() == 3
-		} else if te.Month() == 11 {
-			return te.Day() == 22
-		} else if te.Month() == 12 {
-			return te.Day() == 25
+	byMonth, ok := nyseHolidays[te.Year()]
+	if !ok {
+		return false
+	}
+	days, ok := byMonth[te.Month()]
+	if !ok {
+		return false
+	}
+	day := te.Day()
+	for _, holiday := range days {
+		if day == holiday {
+			return true
 		}
 	}
 	return false
